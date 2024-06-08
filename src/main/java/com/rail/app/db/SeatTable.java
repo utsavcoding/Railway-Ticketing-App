@@ -1,10 +1,13 @@
 package com.rail.app.db;
 
 import com.rail.app.dto.Seat;
+import com.rail.app.exception.ResourceNotAvailableException;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Repository
 public class SeatTable {
 
     private final String[] SECTIONS={"SA","SB"};
@@ -43,7 +46,7 @@ public class SeatTable {
     /**
      * Updates the seat to mark as booked, otherwise return already booked
      */
-    public Boolean update(String seatId){
+    private Boolean update(String seatId){
         SeatAllocation seatAllocation=table.get(seatId);
         if (seatAllocation.isBooked) return false;
         seatAllocation.isBooked=true;
@@ -52,5 +55,16 @@ public class SeatTable {
 
     public Seat read(String seatId){
         return table.get(seatId).seat;
+    }
+
+    public Seat getFirstAvailableSeat() throws ResourceNotAvailableException {
+        for(String seatId: table.keySet()){
+            SeatAllocation seatAllocation=table.get(seatId);
+            if(!seatAllocation.isBooked){
+                seatAllocation.isBooked=true;
+                return seatAllocation.seat;
+            }
+        }
+        throw new ResourceNotAvailableException("Sorry! No seats available.");
     }
 }
