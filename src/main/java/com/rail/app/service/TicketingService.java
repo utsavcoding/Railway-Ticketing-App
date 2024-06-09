@@ -31,7 +31,8 @@ public class TicketingService {
         return ticket;
     }
 
-    public void updateTicket(Ticket ticket){
+    public void updateTicket(Ticket ticket) throws ResourceNotAvailableException {
+        if(seatTable.isBooked(ticket.getSeat().getSeatId())) throw new ResourceNotAvailableException("Sorry! Booking is not available for seatId:"+ticket.getSeat().getSeatId());
         ticketTable.update(ticket);
     }
 

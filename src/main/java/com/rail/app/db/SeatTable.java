@@ -43,18 +43,8 @@ public class SeatTable {
         }
     }
 
-    /**
-     * Updates the seat to mark as booked, otherwise return already booked
-     */
-    private Boolean update(String seatId){
-        SeatAllocation seatAllocation=table.get(seatId);
-        if (seatAllocation.isBooked) return false;
-        seatAllocation.isBooked=true;
-        return true;
-    }
-
-    public Seat read(String seatId){
-        return table.get(seatId).seat;
+    public boolean isBooked(String seatId){
+        return table.get(seatId).isBooked;
     }
 
     public Seat getFirstAvailableSeat() throws ResourceNotAvailableException {

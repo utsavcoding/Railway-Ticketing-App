@@ -23,10 +23,12 @@ public class TicketingServiceTest {
     private User user1;
     private User user2;
     private Receipt receipt;
+    private Seat seat;
+    private Ticket ticket;
     @Mock
     private TicketTable mockedTicketTable;
     @Mock
-    private SeatTable seatTable;
+    private SeatTable mockedSeatTable;
     @InjectMocks
     private TicketingService ticketingService;
     private AutoCloseable autoCloseable;
@@ -37,6 +39,8 @@ public class TicketingServiceTest {
         user1 =new User("johndoe@gmail.com","John","Doe");
         user2 =new User("pirates@gmail.com","Jack","Sparrow");
         receipt=new Receipt("LDN","FRA", user1,20.0);
+        seat=new Seat("SA-2F");
+        ticket=new Ticket(Utils.randomULIDGenerator(),user1,seat,new Station("LDN"),new Station("FRA"));
     }
 
     @AfterEach
@@ -66,9 +70,10 @@ public class TicketingServiceTest {
     }
 
     @Test
-    public void updateTicket(){
+    public void updateTicket() throws ResourceNotAvailableException {
         Mockito.doNothing().when(mockedTicketTable).update(Mockito.any(Ticket.class));
-        ticketingService.updateTicket(new Ticket());
+        Mockito.when(mockedSeatTable.isBooked(Mockito.anyString())).thenReturn(false);
+        ticketingService.updateTicket(ticket);
         Mockito.verify(mockedTicketTable).update(Mockito.any(Ticket.class));
     }
 
