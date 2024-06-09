@@ -1,6 +1,5 @@
 package com.rail.app.controller;
 
-import com.rail.app.db.TicketTable;
 import com.rail.app.dto.Receipt;
 import com.rail.app.dto.Ticket;
 import com.rail.app.exception.ResourceNotAvailableException;
@@ -9,13 +8,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -57,12 +54,12 @@ public class TicketingController {
     @Operation(summary = "Get booked ticket for user by ticketId", description = "Get booked ticket by ticketId")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Return booked ticket for given ticketId"),
-            @ApiResponse(responseCode = "404", description = "Resource not found"),
+            @ApiResponse(responseCode = "404", description = "Resource not found for ticket not available"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     public ResponseEntity<Ticket> getTicketById(
             @PathVariable String ticketId
-    ){
+    ) throws ResourceNotAvailableException {
         return ResponseEntity.ok(ticketingService.getTicket(ticketId));
     }
 
@@ -70,12 +67,12 @@ public class TicketingController {
     @Operation(summary = "Delete booked ticket for user by ticketId", description = "Get booked ticket by ticketId")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ticket is cancelled/deleted with a success message"),
-            @ApiResponse(responseCode = "404", description = "Resource not found"),
+            @ApiResponse(responseCode = "404", description = "Resource not found for ticket not available"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
     public ResponseEntity<String> deleteTicketById(
             @PathVariable String ticketId
-    ){
+    ) throws ResourceNotAvailableException {
         ticketingService.deleteTicket(ticketId);
         return ResponseEntity.ok("Ticket booking is cancelled");
     }
@@ -84,6 +81,7 @@ public class TicketingController {
     @Operation(summary = "Update booked ticket with a new modified ticket details", description = "Update booked ticket with a new modified ticket details")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ticket is modified/updated with a success message"),
+            @ApiResponse(responseCode = "409", description = "Conflict with already booked seat"),
             @ApiResponse(responseCode = "404", description = "Resource not found"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })

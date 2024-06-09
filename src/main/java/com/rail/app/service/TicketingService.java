@@ -32,15 +32,15 @@ public class TicketingService {
     }
 
     public void updateTicket(Ticket ticket) throws ResourceNotAvailableException {
-        if(seatTable.isBooked(ticket.getSeat().getSeatId())) throw new ResourceNotAvailableException("Sorry! Booking is not available for seatId:"+ticket.getSeat().getSeatId());
-        ticketTable.update(ticket);
+        if(seatTable.getAvailable(ticket.getSeat().getSeatId())!=null)
+            ticketTable.update(ticket);
     }
 
-    public void deleteTicket(String ticketId){
+    public void deleteTicket(String ticketId) throws ResourceNotAvailableException {
         ticketTable.delete(ticketId);
     }
 
-    public Ticket getTicket(String ticketId){
+    public Ticket getTicket(String ticketId) throws ResourceNotAvailableException {
         return ticketTable.read(ticketId);
     }
 

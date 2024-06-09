@@ -2,6 +2,7 @@ package com.rail.app.db;
 
 import com.rail.app.dto.Seat;
 import com.rail.app.exception.ResourceNotAvailableException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -42,8 +43,12 @@ public class SeatTable {
         }
     }
 
-    public boolean isBooked(String seatId){
-        return table.get(seatId).isBooked;
+    public Seat getAvailable(String seatId) throws ResourceNotAvailableException {
+        SeatAllocation seatAllocation=table.get(seatId);
+        if(seatAllocation.isBooked)
+            throw new ResourceNotAvailableException("Sorry! Booking is not available for seatId:"+seatAllocation.seat.getSeatId(), HttpStatus.CONFLICT);
+        seatAllocation.isBooked=true;
+        return seatAllocation.seat;
     }
 
     public Seat getFirstAvailableSeat() throws ResourceNotAvailableException {

@@ -3,15 +3,14 @@ package com.rail.app.service;
 import com.rail.app.SampleBaseTest;
 import com.rail.app.db.SeatTable;
 import com.rail.app.db.TicketTable;
-import com.rail.app.dto.*;
+import com.rail.app.dto.Seat;
+import com.rail.app.dto.Station;
+import com.rail.app.dto.Ticket;
 import com.rail.app.exception.ResourceNotAvailableException;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,14 +35,14 @@ public class TicketingServiceTest extends SampleBaseTest {
     }
 
     @Test
-    public void getTicket(){
+    public void getTicket() throws ResourceNotAvailableException {
         Mockito.when(mockedTicketTable.read(Mockito.anyString())).thenReturn(new Ticket());
         Ticket ticket=ticketingService.getTicket("TICKETID123");
         assertNotNull(ticket);
     }
 
     @Test
-    public void deleteTicket(){
+    public void deleteTicket() throws ResourceNotAvailableException {
         Mockito.doNothing().when(mockedTicketTable).delete(Mockito.anyString());
         ticketingService.deleteTicket("TICKETID123");
         Mockito.verify(mockedTicketTable).delete(Mockito.anyString());
@@ -52,7 +51,7 @@ public class TicketingServiceTest extends SampleBaseTest {
     @Test
     public void updateTicket() throws ResourceNotAvailableException {
         Mockito.doNothing().when(mockedTicketTable).update(Mockito.any(Ticket.class));
-        Mockito.when(mockedSeatTable.isBooked(Mockito.anyString())).thenReturn(false);
+        Mockito.when(mockedSeatTable.getAvailable(Mockito.anyString())).thenReturn(seat);
         ticketingService.updateTicket(ticket);
         Mockito.verify(mockedTicketTable).update(Mockito.any(Ticket.class));
     }
