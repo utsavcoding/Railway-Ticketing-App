@@ -33,7 +33,7 @@ public class TicketTable {
         List<Ticket> tickets=new ArrayList<>();
         for(String key:table.keySet()){
             Ticket ticket=table.get(key);
-            if(sectionName==null || ticket.getTicketId().contains(sectionName))
+            if(sectionName==null || ticket.getSeat().getSeatId().contains(sectionName))
                 tickets.add(ticket);
         }
         return tickets;

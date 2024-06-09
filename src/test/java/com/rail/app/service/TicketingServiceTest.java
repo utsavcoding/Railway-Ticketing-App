@@ -1,5 +1,6 @@
 package com.rail.app.service;
 
+import com.rail.app.SampleBaseTest;
 import com.rail.app.db.SeatTable;
 import com.rail.app.db.TicketTable;
 import com.rail.app.dto.*;
@@ -18,35 +19,14 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class TicketingServiceTest {
+public class TicketingServiceTest extends SampleBaseTest {
 
-    private User user1;
-    private User user2;
-    private Receipt receipt;
-    private Seat seat;
-    private Ticket ticket;
     @Mock
     private TicketTable mockedTicketTable;
     @Mock
     private SeatTable mockedSeatTable;
     @InjectMocks
     private TicketingService ticketingService;
-    private AutoCloseable autoCloseable;
-
-    @BeforeEach
-    public void setup(){
-        autoCloseable=MockitoAnnotations.openMocks(this);
-        user1 =new User("johndoe@gmail.com","John","Doe");
-        user2 =new User("pirates@gmail.com","Jack","Sparrow");
-        receipt=new Receipt("LDN","FRA", user1,20.0);
-        seat=new Seat("SA-2F");
-        ticket=new Ticket(Utils.randomULIDGenerator(),user1,seat,new Station("LDN"),new Station("FRA"));
-    }
-
-    @AfterEach
-    public void shutDown() throws Exception {
-        autoCloseable.close();
-    }
 
     @Test
     public void bookTicket() throws ResourceNotAvailableException {
@@ -90,7 +70,7 @@ public class TicketingServiceTest {
         Ticket ticket2=new Ticket(
                 Utils.randomULIDGenerator(),
                 user2,
-                new Seat("SA-1B"),
+                new Seat("SB-1B"),
                 new Station(receipt.getFrom()),
                 new Station(receipt.getTo())
         );

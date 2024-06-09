@@ -34,10 +34,9 @@ public class SeatTable {
         for(String sec:SECTIONS){
             for(int i=1;i<=ROWS;i++){
                 for(String col:COLUMNS){
-                    String seatId=sec + "-" + String.valueOf(i) + col;
+                    String seatId=sec + "-" + i + col;
                     SeatAllocation seatAllocation=new SeatAllocation(new Seat(seatId),false);
                     table.put(seatId,seatAllocation);
-                    System.out.println(seatId+" is added");
                 }
             }
         }

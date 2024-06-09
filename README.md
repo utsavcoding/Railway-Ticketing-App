@@ -50,11 +50,12 @@ Sample Ticket Payload:
 ## How To Run Project
 ### With Docker
 - Goto root of this project directory
+- Build the project using: ``` ./gradlew build ```
 - Create docker image using: ``` docker build -t railway-ticketing-app . ```
 - Run docker container using the built image: ``` docker run -p 8080:8080 railway-ticketing-app ```
 
 ### Without Docker
-- Install Java17 and gradle
+- Install Java17
 - Goto root of this project directory
 - Start spring boot application using: ``` ./gradlew bootRun ```
 
